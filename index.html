@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Reminder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 1. Registration Page -->
+    <div id="register-page" class="container">
+        <div class="glass-card">
+            <h1>Student Registry</h1>
+            <form id="reg-form">
+                <input type="text" id="name" placeholder="Full Name" required>
+                <input type="text" id="college" placeholder="College Name" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <button type="submit">Create Digital ID</button>
+            </form>
+        </div>
+    </div>
 
+    <!-- 2. Dashboard Page -->
+    <div id="dashboard-page" class="container hidden">
+        <header>
+            <h2 id="welcome-msg">Hi, Student</h2>
+            <div id="student-id-tag"></div>
+        </header>
+
+        <div class="glass-card task-section">
+            <h3>Add Reminder</h3>
+            <input type="text" id="task-title" placeholder="Assignment Name">
+            <input type="datetime-local" id="task-time">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <div id="task-list"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
