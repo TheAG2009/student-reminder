@@ -1,45 +1,52 @@
+:root {
+    --bg: #0a0a15;
+    --text: #ffffff;
+    --neon: #00f2ff;
+    --card: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme {
+    --bg: #f4f7f6;
+    --text: #1a1a1a;
+    --card: rgba(0, 0, 0, 0.05);
+}
+
 body {
-    background: #0f172a;
-    color: white;
-    font-family: sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
     margin: 0;
-    display: flex;
-    justify-content: center;
+    transition: 0.3s;
 }
 
-.container {
-    width: 90%;
-    max-width: 400px;
-    padding-top: 50px;
-}
+.screen { min-height: 100vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+.hidden { display: none !important; }
 
+/* UI Components */
 .glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    background: var(--card);
+    backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-input, button {
+    border-radius: 25px;
+    padding: 25px;
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: none;
-    box-sizing: border-box;
+    max-width: 400px;
 }
 
-input { background: rgba(255, 255, 255, 0.1); color: white; }
-button { background: #00d4ff; font-weight: bold; cursor: pointer; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+input, select { background: rgba(128,128,128,0.1); border: 1px solid transparent; padding: 12px; color: var(--text); border-radius: 10px; outline: none; }
+input:focus { border-color: var(--neon); }
 
-.hidden { display: none; }
+.primary-btn { width: 100%; background: var(--neon); color: #000; font-weight: 800; padding: 15px; border: none; border-radius: 12px; cursor: pointer; margin-top: 15px; }
 
-.task-item {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 15px;
-    border-radius: 15px;
-    margin-top: 10px;
-    border-left: 4px solid #00d4ff;
-}
+/* ID Card 3D */
+.card-scene { width: 320px; height: 190px; perspective: 1000px; margin: 20px 0; }
+.id-card { width: 100%; height: 100%; position: relative; transition: 0.6s; transform-style: preserve-3d; cursor: pointer; }
+.id-card.flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; padding: 20px; box-sizing: border-box; }
+.front { background: linear-gradient(45deg, #16162d, #0a0a15); border: 1px solid var(--neon); }
+.back { background: #111; transform: rotateY(180deg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+/* Utilities */
+.theme-toggle { position: fixed; top: 20px; right: 20px; font-size: 24px; cursor: pointer; }
+.logout-btn { background: #ff444422; border: 1px solid #ff4444; color: #ff4444; padding: 5px 15px; border-radius: 8px; cursor: pointer; }
