@@ -2,114 +2,344 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Student Hub</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <title>Smart Student Reminder</title>
+    
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <!-- Google Fonts (Poppins for modern premium look) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark-theme">
+<body>
 
-    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
-
-    <div id="app">
-        <!-- AUTH SCREEN (Login & Registration) -->
-        <section id="auth-screen" class="screen">
-            <div class="glass-card animate-up">
-                <h1 class="neon-text">Nexus System</h1>
-                
-                <!-- Login Box -->
-                <div id="login-box">
-                    <h3>Login</h3>
-                    <form onsubmit="handleLogin(event)">
-                        <input type="email" id="log-email" placeholder="Email" required>
-                        <input type="password" id="log-pass" placeholder="Password" required>
-                        <button type="submit" class="primary-btn">Sign In</button>
-                    </form>
-                    <p class="toggle-link" onclick="toggleAuth(true)">New here? Create Profile</p>
-                </div>
-
-                <!-- Register Box (Hidden by default) -->
-                <div id="register-box" class="hidden">
-                    <h3>Register (15 Fields)</h3>
-                    <form onsubmit="handleRegister(event)" class="scroll-form">
-                        <div class="form-grid">
-                            <input type="text" id="reg-name" placeholder="Full Name" required>
-                            <input type="email" id="reg-email" placeholder="Email" required>
-                            <input type="password" id="reg-pass" placeholder="Create Password" required>
-                            <input type="text" id="reg-college" placeholder="College Name" required>
-                            <input type="text" id="reg-roll" placeholder="Roll No">
-                            <input type="tel" id="reg-phone" placeholder="Phone">
-                            <input type="text" id="reg-dept" placeholder="Department">
-                            <input type="text" id="reg-sem" placeholder="Semester">
-                            <input type="date" id="reg-dob">
-                            <input type="text" id="reg-blood" placeholder="Blood Group">
-                            <input type="text" id="reg-city" placeholder="City">
-                            <input type="text" id="reg-state" placeholder="State">
-                            <input type="text" id="reg-pin" placeholder="PIN Code">
-                            <input type="text" id="reg-emergency" placeholder="Emergency Contact">
-                            <select id="reg-gender">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="primary-btn">Register & Generate ID</button>
-                    </form>
-                    <p class="toggle-link" onclick="toggleAuth(false)">Back to Login</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- STUDENT DASHBOARD -->
-        <section id="dash-screen" class="screen hidden">
-            <header class="header">
-                <div>
-                    <h2 id="user-welcome">Hi, Alex</h2>
-                    <span id="user-id-tag" class="badge">NX-0000</span>
-                </div>
-                <button onclick="logout()" class="logout-btn">Logout</button>
-            </header>
-
-            <div class="card-scene">
-                <div class="id-card" onclick="this.classList.toggle('flipped')">
-                    <div class="card-face front">
-                        <div class="chip"></div>
-                        <div class="card-info">
-                            <h3 id="card-name">STUDENT NAME</h3>
-                            <p id="card-college">UNIVERSITY NAME</p>
-                        </div>
-                    </div>
-                    <div class="card-face back">
-                        <div class="qr-code"></div>
-                        <p>OFFICIAL STUDENT TOKEN</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card task-section">
-                <h3>Add Reminder</h3>
-                <div class="input-row">
-                    <input type="text" id="task-name" placeholder="What's next?">
-                    <input type="datetime-local" id="task-date">
-                    <button onclick="addTask()" class="add-btn">+</button>
-                </div>
-                <div id="task-list"></div>
-            </div>
-        </section>
-
-        <!-- ADMIN SCREEN -->
-        <section id="admin-screen" class="screen hidden">
-            <div class="glass-card full">
-                <div class="header">
-                    <h2 class="neon-text">Admin Panel</h2>
-                    <button onclick="logout()" class="logout-btn">Exit</button>
-                </div>
-                <h3>Registered Students</h3>
-                <div id="admin-user-list"></div>
-            </div>
-        </section>
+    <!-- ========================================== -->
+    <!-- SPLASH SCREEN -->
+    <!-- ========================================== -->
+    <div id="splash-screen" class="screen active-screen">
+        <div class="logo-container">
+            <i class="fa-solid fa-graduation-cap glow-icon"></i>
+            <h1 class="neon-text">EduSync</h1>
+            <p>Smart Student Organizer</p>
+        </div>
+        <div class="loading-spinner"></div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- ========================================== -->
+    <!-- AUTHENTICATION SCREEN -->
+    <!-- ========================================== -->
+    <div id="auth-screen" class="screen hidden">
+        <div class="glass-panel auth-container">
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-target="login-form">Login</button>
+                <button class="tab-btn" data-target="signup-form">Register</button>
+                <button class="tab-btn admin-tab" data-target="admin-login-form"><i class="fa-solid fa-shield-halved"></i></button>
+            </div>
+
+            <!-- Student Login -->
+            <form id="login-form" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="primary-btn neon-btn">Login to Dashboard</button>
+            </form>
+
+            <!-- Admin Login -->
+            <form id="admin-login-form" class="auth-form hidden">
+                <h2>Admin Portal</h2>
+                <div class="input-group">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <input type="email" id="admin-email" placeholder="Admin Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="admin-password" placeholder="Admin Password" required>
+                </div>
+                <button type="submit" class="primary-btn admin-btn">Access Panel</button>
+            </form>
+
+            <!-- Student Registration (Multi-step illusion via CSS) -->
+            <form id="signup-form" class="auth-form hidden scrollable-form">
+                <h2>Create Account</h2>
+                
+                <div class="form-grid">
+                    <!-- Personal Details -->
+                    <div class="input-group"><input type="text" id="reg-fullname" placeholder="Full Name" required></div>
+                    <div class="input-group"><input type="text" id="reg-father" placeholder="Father's Name" required></div>
+                    <div class="input-group"><input type="text" id="reg-mother" placeholder="Mother's Name" required></div>
+                    
+                    <div class="input-group row-group">
+                        <select id="reg-gender" required>
+                            <option value="" disabled selected>Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="date" id="reg-dob" required>
+                    </div>
+
+                    <!-- Academic Details -->
+                    <div class="input-group"><input type="text" id="reg-school" placeholder="School/College Name" required></div>
+                    <div class="input-group row-group">
+                        <input type="text" id="reg-standard" placeholder="Standard/Sem" required>
+                        <input type="text" id="reg-department" placeholder="Department" required>
+                    </div>
+                    <div class="input-group"><input type="text" id="reg-roll" placeholder="Roll Number" required></div>
+
+                    <!-- Contact Details -->
+                    <div class="input-group"><input type="email" id="reg-email" placeholder="Email" required></div>
+                    <div class="input-group"><input type="tel" id="reg-phone" placeholder="Phone Number" required></div>
+                    
+                    <!-- Address -->
+                    <div class="input-group"><textarea id="reg-address" placeholder="Full Address" rows="2" required></textarea></div>
+                    <div class="input-group row-group">
+                        <input type="text" id="reg-city" placeholder="City" required>
+                        <input type="text" id="reg-state" placeholder="State" required>
+                    </div>
+                    <div class="input-group"><input type="text" id="reg-pincode" placeholder="Pin Code" required></div>
+
+                    <!-- Profile Photo -->
+                    <div class="file-upload-group">
+                        <label for="reg-photo" class="file-label">
+                            <i class="fa-solid fa-camera"></i> Upload Profile Photo
+                        </label>
+                        <input type="file" id="reg-photo" accept="image/*" required>
+                        <img id="reg-photo-preview" class="hidden" alt="Preview">
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-btn neon-btn">Register & Generate ID</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- STUDENT DASHBOARD -->
+    <!-- ========================================== -->
+    <div id="student-dashboard" class="screen hidden main-layout">
+        
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="user-info">
+                <img id="header-avatar" src="default-avatar.png" alt="Profile">
+                <div>
+                    <h3 id="header-name">Welcome, Student</h3>
+                    <p id="header-id">ID: ---------</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="noti-btn" class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <button id="logout-btn" class="icon-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-content scroll-hide">
+            
+            <!-- Quick Stats / Next Up -->
+            <section class="stats-container">
+                <div class="glass-card stat-card glow-blue">
+                    <i class="fa-solid fa-book-open"></i>
+                    <div>
+                        <h4 id="stat-pending">0</h4>
+                        <p>Pending Tasks</p>
+                    </div>
+                </div>
+                <div class="glass-card stat-card glow-purple">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <div>
+                        <h4 id="stat-exams">0</h4>
+                        <p>Upcoming Exams</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Digital ID Card Section -->
+            <section class="id-card-section">
+                <div class="flip-card" id="student-id-card">
+                    <div class="flip-card-inner">
+                        <!-- Front -->
+                        <div class="flip-card-front glass-card premium-bg">
+                            <div class="id-header">
+                                <h4 id="id-school-name">School Name</h4>
+                                <span>STUDENT ID</span>
+                            </div>
+                            <div class="id-body">
+                                <img id="id-photo" src="default-avatar.png" alt="Student">
+                                <div class="id-details">
+                                    <h2 id="id-name">Student Name</h2>
+                                    <p class="id-course" id="id-course">Department - Sem</p>
+                                    <p>DOB: <span id="id-dob">--/--/----</span></p>
+                                    <p>Phone: <span id="id-phone">----------</span></p>
+                                </div>
+                            </div>
+                            <div class="id-footer">
+                                <p id="id-uid">ID: ---------</p>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="flip-card-back glass-card premium-bg">
+                            <div class="qr-container">
+                                <div id="qr-placeholder"><i class="fa-solid fa-qrcode"></i></div>
+                                <p>Scan for verification</p>
+                            </div>
+                            <div class="emergency-info">
+                                <p>Address: <span id="id-address">...</span></p>
+                            </div>
+                            <button id="download-id-btn" class="secondary-btn"><i class="fa-solid fa-download"></i> Save</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="tap-hint">Tap card to flip</p>
+            </section>
+
+            <!-- Task Management / Reminders -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h3>My Reminders</h3>
+                    <div class="filter-group">
+                        <select id="task-filter">
+                            <option value="all">All</option>
+                            <option value="homework">Homework</option>
+                            <option value="exam">Exams</option>
+                            <option value="assignment">Assignments</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="tasks-container" class="task-list">
+                    <!-- Tasks injected by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Action Button -->
+        <button id="fab-add-task" class="fab neon-btn">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <!-- Bottom Navigation Mobile -->
+        <nav class="bottom-nav glass-nav">
+            <button class="nav-item active" data-view="dashboard"><i class="fa-solid fa-house"></i></button>
+            <button class="nav-item" data-view="calendar"><i class="fa-regular fa-calendar-alt"></i></button>
+            <button class="nav-item" data-view="profile"><i class="fa-regular fa-user"></i></button>
+        </nav>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ADMIN DASHBOARD -->
+    <!-- ========================================== -->
+    <div id="admin-dashboard" class="screen hidden main-layout">
+        <header class="glass-header admin-header">
+            <h3>Admin Portal</h3>
+            <button id="admin-logout-btn" class="icon-btn"><i class="fa-solid fa-power-off"></i></button>
+        </header>
+
+        <main class="dashboard-content">
+            <div class="stats-container">
+                <div class="glass-card stat-card glow-red">
+                    <h2 id="admin-total-students">0</h2>
+                    <p>Total Students</p>
+                </div>
+                <div class="glass-card stat-card glow-blue">
+                    <h2 id="admin-total-tasks">0</h2>
+                    <p>Active Tasks</p>
+                </div>
+            </div>
+
+            <section class="admin-data-section">
+                <div class="search-bar glass-input">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="admin-search" placeholder="Search students by Name or ID...">
+                </div>
+
+                <div class="table-container glass-card">
+                    <table id="admin-students-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>ID</th>
+                                <th>Dept</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALS & OVERLAYS -->
+    <!-- ========================================== -->
+    
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-content popup-anim">
+            <div class="modal-header">
+                <h2>New Reminder</h2>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="task-form">
+                <div class="input-group">
+                    <input type="text" id="task-title" placeholder="Task Title (e.g. Math Assignment)" required>
+                </div>
+                <div class="input-group">
+                    <select id="task-type" required>
+                        <option value="Homework">Homework</option>
+                        <option value="Assignment">Assignment</option>
+                        <option value="Exam">Exam</option>
+                        <option value="Class Test">Class Test</option>
+                        <option value="General">General Note</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="task-subject" placeholder="Subject">
+                </div>
+                <div class="input-group row-group">
+                    <input type="date" id="task-date" required>
+                    <input type="time" id="task-time" required>
+                </div>
+                <div class="input-group">
+                    <textarea id="task-notes" placeholder="Additional Notes..." rows="2"></textarea>
+                </div>
+                <button type="submit" class="primary-btn neon-btn w-100">Save Reminder</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- GSAP for Advanced Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Main App Logic -->
+    <script src="script.js"></script>
 </body>
 </html>
