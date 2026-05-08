@@ -1,43 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Reminder</title>
+    <title>Nexus Student Hub</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!-- 1. Registration Page -->
-    <div id="register-page" class="container">
-        <div class="glass-card">
-            <h1>Student Registry</h1>
-            <form id="reg-form">
-                <input type="text" id="name" placeholder="Full Name" required>
-                <input type="text" id="college" placeholder="College Name" required>
-                <input type="tel" id="phone" placeholder="Phone Number" required>
-                <button type="submit">Create Digital ID</button>
-            </form>
-        </div>
+<body class="dark-theme">
+
+    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
+
+    <div id="app">
+        <!-- AUTH SCREEN (Login & Registration) -->
+        <section id="auth-screen" class="screen">
+            <div class="glass-card animate-up">
+                <h1 class="neon-text">Nexus System</h1>
+                
+                <!-- Login Box -->
+                <div id="login-box">
+                    <h3>Login</h3>
+                    <form onsubmit="handleLogin(event)">
+                        <input type="email" id="log-email" placeholder="Email" required>
+                        <input type="password" id="log-pass" placeholder="Password" required>
+                        <button type="submit" class="primary-btn">Sign In</button>
+                    </form>
+                    <p class="toggle-link" onclick="toggleAuth(true)">New here? Create Profile</p>
+                </div>
+
+                <!-- Register Box (Hidden by default) -->
+                <div id="register-box" class="hidden">
+                    <h3>Register (15 Fields)</h3>
+                    <form onsubmit="handleRegister(event)" class="scroll-form">
+                        <div class="form-grid">
+                            <input type="text" id="reg-name" placeholder="Full Name" required>
+                            <input type="email" id="reg-email" placeholder="Email" required>
+                            <input type="password" id="reg-pass" placeholder="Create Password" required>
+                            <input type="text" id="reg-college" placeholder="College Name" required>
+                            <input type="text" id="reg-roll" placeholder="Roll No">
+                            <input type="tel" id="reg-phone" placeholder="Phone">
+                            <input type="text" id="reg-dept" placeholder="Department">
+                            <input type="text" id="reg-sem" placeholder="Semester">
+                            <input type="date" id="reg-dob">
+                            <input type="text" id="reg-blood" placeholder="Blood Group">
+                            <input type="text" id="reg-city" placeholder="City">
+                            <input type="text" id="reg-state" placeholder="State">
+                            <input type="text" id="reg-pin" placeholder="PIN Code">
+                            <input type="text" id="reg-emergency" placeholder="Emergency Contact">
+                            <select id="reg-gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="primary-btn">Register & Generate ID</button>
+                    </form>
+                    <p class="toggle-link" onclick="toggleAuth(false)">Back to Login</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT DASHBOARD -->
+        <section id="dash-screen" class="screen hidden">
+            <header class="header">
+                <div>
+                    <h2 id="user-welcome">Hi, Alex</h2>
+                    <span id="user-id-tag" class="badge">NX-0000</span>
+                </div>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </header>
+
+            <div class="card-scene">
+                <div class="id-card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-face front">
+                        <div class="chip"></div>
+                        <div class="card-info">
+                            <h3 id="card-name">STUDENT NAME</h3>
+                            <p id="card-college">UNIVERSITY NAME</p>
+                        </div>
+                    </div>
+                    <div class="card-face back">
+                        <div class="qr-code"></div>
+                        <p>OFFICIAL STUDENT TOKEN</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card task-section">
+                <h3>Add Reminder</h3>
+                <div class="input-row">
+                    <input type="text" id="task-name" placeholder="What's next?">
+                    <input type="datetime-local" id="task-date">
+                    <button onclick="addTask()" class="add-btn">+</button>
+                </div>
+                <div id="task-list"></div>
+            </div>
+        </section>
+
+        <!-- ADMIN SCREEN -->
+        <section id="admin-screen" class="screen hidden">
+            <div class="glass-card full">
+                <div class="header">
+                    <h2 class="neon-text">Admin Panel</h2>
+                    <button onclick="logout()" class="logout-btn">Exit</button>
+                </div>
+                <h3>Registered Students</h3>
+                <div id="admin-user-list"></div>
+            </div>
+        </section>
     </div>
 
-    <!-- 2. Dashboard Page -->
-    <div id="dashboard-page" class="container hidden">
-        <header>
-            <h2 id="welcome-msg">Hi, Student</h2>
-            <div id="student-id-tag"></div>
-        </header>
-
-        <div class="glass-card task-section">
-            <h3>Add Reminder</h3>
-            <input type="text" id="task-title" placeholder="Assignment Name">
-            <input type="datetime-local" id="task-time">
-            <button onclick="addTask()">Add Task</button>
-        </div>
-
-        <div id="task-list"></div>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
